@@ -1,0 +1,40 @@
+
+@if (open()) {
+  <dialog open (click)="closeModal()"  class="inset-0 z-50 h-screen w-screen bg-[#0009] flex justify-center items-center box-content">
+  <div (click)="$event.stopPropagation()" class="w-250 h-150 p-0 rounded-2xl bg-white ">
+
+    <div class="p-4 rounded-t-2xl bg-[#404] flex justify-end  ">
+      <button (click)="closeModal()" class="p-2 pr-4 pl-4 text-3xl text-white  rounded-2xl  bg-[#f55] hover:bg-[#f00] transition-all duration-500">X</button>
+    </div>
+
+    <form (submit)="$event.preventDefault()"  class="w-full h-full p-10 text-2xl text-white flex flex-col justify-center items-center gap-15">
+      <label class="text-5xl text-black font-bold" for="">Agregar Tarea</label>
+      <div class="min-w-1/2 h-40 p-5  border-2 rounded-full bg-[#404] flex  items-center  gap-4" >
+        <input class="p-4 w-150 border-2  rounded-full" type="text" [value]="todoService.loadToDo(todoService.selected()!)?.task ?? ''" #Task/>
+        <div class="p-5 border-2 border-white rounded-full">
+          <label class="mr-4 text-2xl text-white" for="">Prioridad</label>
+          <select  class="p-2text-red-500" name="prioridad" id="prioridad" [value]="todoService.loadToDo(todoService.selected()!)?.priority ?? 'media'" #Priority >
+            <option value="baja">Baja</option>
+            <option value="media">Media</option>
+            <option value="alta">Alta</option>
+          </select>
+        </div>
+      </div>
+
+      @if(todoService.selected() === null){
+
+        <button (click)="todoService.addToDo(Task.value, Priority.value)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >
+        Agregar Tarea
+      </button>
+    }
+      @else {
+      <button (click)="todoService.updateToDo(todoService.selected()!, Task.value, Priority.value)"
+              class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
+        actualizar
+      </button>
+      }
+    </form>
+  </div>
+</dialog>
+}
+

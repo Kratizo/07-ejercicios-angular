@@ -1,0 +1,15 @@
+
+<div class="w-full p-0 flex  justify-center">
+  <nav class="w-185  p-4 bg-white rounded-2xl grid sm:grid-cols-2 gap-5 overflow-x-hidden">
+    @for (route of Pages; track route.link) {
+      <a [routerLink]="route.link" class="min-w-full min-h-full transition-transform duration-300 scale-100 hover:scale-105 box-content rounded-2xl flex justify-around ">
+        <div class="min-w-full p-0 text-1xl ">
+          <img src="{{route.img}}" alt="Son imagenes cara de mono" class="w-full h-4/5 object-cover rounded-t-2xl">
+            <h2 class="w-full h-1/5 pb-2 text-center text-white bg-[#50a] bg-cover opacity-70 rounded-b-2xl ">
+              {{route.title}}
+            </h2>
+        </div>
+      </a>
+    }
+  </nav>
+</div>
