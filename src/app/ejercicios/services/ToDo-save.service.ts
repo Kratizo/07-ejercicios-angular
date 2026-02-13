@@ -1,9 +1,18 @@
 
-import {  Injectable, signal } from '@angular/core';
+import {  effect, Injectable, signal } from '@angular/core';
 import { ToDo } from '../Interfaces/ToDo-interface';
 
 @Injectable({providedIn: 'root'})
 export class TodoService {
+
+  STORAGE_KEY = 'ToDo'
+
+  filters = {
+    all: (todos: any[]) => todos,
+    completed: (todos: any[]) => todos.filter(t => t.status),
+    pending: (todos: any[]) => todos.filter(t => !t.status)
+  };
+
 
     toDoList = signal<ToDo[]>([
       {num: 1, task: 'Estudiar Angular', status: false, priority: 'media'},
@@ -11,7 +20,39 @@ export class TodoService {
       {num: 3, task: 'Hacer ejercicio', status: false, priority: 'media'},
     ]);
 
-    selected = signal<number | null>(null);
+    constructor() {
+      effect(() => {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.toDoList()))
+      });
+
+      const stored = localStorage.getItem(this.STORAGE_KEY);
+      if(stored){
+        this.toDoList.set(JSON.parse(stored));
+      };
+    };
+  selected = signal<number | null>(null);
+  currentFilter = signal<(todos: ToDo[]) => ToDo[]>(this.filters.all);
+
+  getFilteredList() {
+    return this.currentFilter()(this.toDoList());
+  }
+
+  showAll() {
+    this.currentFilter.set(this.filters.all);
+  }
+
+  showCompleted() {
+    this.currentFilter.set(this.filters.completed);
+  }
+
+  showPending() {
+    this.currentFilter.set(this.filters.pending);
+  }
+
+
+
+
+
 
     selectToDo(num: number){
       if(num === this.selected()) {
@@ -27,11 +68,26 @@ export class TodoService {
           this.toDoList.update(prev => [...prev, {num: newNum, task: task, status: false, priority: priority}]);
     }
 
+    completeToDo(num: number) {
+    this.toDoList.update(prev =>
+      prev.map(todo =>
+        todo.num === num
+          ? { ...todo, status: true } // actualiza solo la tarea seleccionada
+          : todo                      // las demás quedan igual
+        )
+      );
+      if(this.selected() === num){
+        this.selected.set(null);
+      }
+    }
+
+
     deleteToDo(num: number){
       this.toDoList.update(prev => prev.filter(t => t.num !== num));
       if(this.selected() === num){
         this.selected.set(null);
       }
+
     }
 
     updateToDo(num: number, newTask: string, newPriority: string){
