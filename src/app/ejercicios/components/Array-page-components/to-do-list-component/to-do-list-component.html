@@ -1,6 +1,6 @@
 <div class="w-full p-10 text-2xl text-white flex flex-col justify-between items-center gap-15">
     <ToDo-filter-component/>
-  <table class="w-325  text-white  border-white rounded-3xl bg-[#404] text-center">
+  <table class="w-325 text-white  border-white rounded-3xl bg-[#404] text-center">
     <thead class="p-10 text-3xl ">
         <th class="p-2" >Id</th>
         <th class="p-2" >Tarea</th>
@@ -10,13 +10,13 @@
     <tbody class="p-5">
       @for (item of filter.getFilteredList(); track item.num) {
         <tr (click)="TodoService.selectToDo(item.num)"  [class.bg-[#406]]="TodoService.selected() === item.num"
-            [class.line-through]="item.status" class="cursor-pointer hover:bg-[#406]"  >
+            [class.line-through]="item.status" class="cursor-pointer hover:bg-[#406] ">
           <td class="p-2">{{ item.num }}</td>
           <td class="p-2">{{ item.task }}</td>
           <td class="p-2">{{ item.priority }}</td>
           <td class="p-2 flex justify-center gap-5">
-            <button (click)="TodoService.completeToDo(item.num)" [disabled]="TodoService.selected() !== item.num"  class="cursor-pointer bg-green-500 transform hover:scale-105 text-white font-bold py-2 px-4 rounded" >Completar</button>
-            <button (click)="TodoService.deleteToDo(item.num)" [disabled]="TodoService.selected() !== item.num" class="cursor-pointer bg-red-500 transform hover:scale-105 text-white font-bold py-2 px-4 rounded">Eliminar</button>
+            <button (click)="$event.stopImmediatePropagation(); TodoService.completeToDo(item.num)" [disabled]="TodoService.selected() !== item.num"  class="cursor-pointer bg-green-500 transform hover:scale-105 text-white font-bold py-2 px-4 rounded" >Completar</button>
+            <button (click)="$event.stopImmediatePropagation(); TodoService.deleteToDo(item.num)" [disabled]="TodoService.selected() !== item.num" class="cursor-pointer bg-red-500 transform hover:scale-105 text-white font-bold py-2 px-4 rounded">Eliminar</button>
           </td>
         </tr>
       }
@@ -27,6 +27,7 @@
   <button class="w-5/10 py-2 px-4 text-white font-bold rounded-full bg-blue-500 hover:bg-blue-700" (click)="openModal()">
     {{TodoService.selected() === null ? 'Agregar tarea' : 'Actualizar'}}
   </button>
+
   @if (Modalstate()) {
     <update-component
     [open]="Modalstate()"

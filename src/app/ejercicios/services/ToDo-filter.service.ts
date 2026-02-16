@@ -5,14 +5,13 @@ import { TodoService } from './ToDo-save.service';
 @Injectable({providedIn: 'root'})
 export class FilterService {
 
-    filters = {
+  filters = {
     all: (todos: any[]) => todos,
     completed: (todos: any[]) => todos.filter(t => t.status),
     pending: (todos: any[]) => todos.filter(t => !t.status)
   };
 
   TodoService = inject(TodoService)
-
   currentFilter = signal<(todos: ToDo[]) => ToDo[]>(this.filters.all);
 
   getFilteredList() {

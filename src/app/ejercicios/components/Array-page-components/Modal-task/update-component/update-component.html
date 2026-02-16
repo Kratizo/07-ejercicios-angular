@@ -10,7 +10,7 @@
     <form (submit)="$event.preventDefault()"  class="w-full h-full p-10 text-2xl text-white flex flex-col justify-center items-center gap-15">
       <label class="text-5xl text-black font-bold" for="">Agregar Tarea</label>
       <div class="min-w-1/2 h-40 p-5  border-2 rounded-full bg-[#404] flex  items-center  gap-4" >
-        <input class="p-4 w-150 border-2  rounded-full" type="text" [value]="todoService.loadToDo(todoService.selected()!)?.task ?? ''" #Task/>
+        <input (input)="0" class="p-4 w-150 border-2  rounded-full" type="text" [value]="todoService.loadToDo(todoService.selected()!)?.task ?? ''" #Task/>
         <div class="p-5 border-2 border-white rounded-full">
           <label class="mr-4 text-2xl text-white" for="">Prioridad</label>
           <select  class="p-2text-red-500" name="prioridad" id="prioridad" [value]="todoService.loadToDo(todoService.selected()!)?.priority ?? 'media'" #Priority >
@@ -23,12 +23,12 @@
 
       @if(todoService.selected() === null){
 
-        <button (click)="todoService.addToDo(Task.value, Priority.value)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >
+        <button (click)="todoService.addToDo(Task.value, Priority.value)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" [disabled]="!Task.value.trim()" >
         Agregar Tarea
       </button>
     }
       @else {
-      <button (click)="todoService.updateToDo(todoService.selected()!, Task.value, Priority.value)"
+      <button (click)="closeModal(); todoService.updateToDo(todoService.selected()!, Task.value, Priority.value)"
               class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
         actualizar
       </button>

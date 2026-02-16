@@ -7,13 +7,6 @@ export class TodoService {
 
   STORAGE_KEY = 'ToDo'
 
-  filters = {
-    all: (todos: any[]) => todos,
-    completed: (todos: any[]) => todos.filter(t => t.status),
-    pending: (todos: any[]) => todos.filter(t => !t.status)
-  };
-
-
     toDoList = signal<ToDo[]>([
       {num: 1, task: 'Estudiar Angular', status: false, priority: 'media'},
       {num: 2, task: 'Ir a cagar', status: false, priority: 'media'},
@@ -21,6 +14,8 @@ export class TodoService {
     ]);
 
     constructor() {
+
+
       effect(() => {
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.toDoList()))
       });
@@ -30,28 +25,7 @@ export class TodoService {
         this.toDoList.set(JSON.parse(stored));
       };
     };
-  selected = signal<number | null>(null);
-  currentFilter = signal<(todos: ToDo[]) => ToDo[]>(this.filters.all);
-
-  getFilteredList() {
-    return this.currentFilter()(this.toDoList());
-  }
-
-  showAll() {
-    this.currentFilter.set(this.filters.all);
-  }
-
-  showCompleted() {
-    this.currentFilter.set(this.filters.completed);
-  }
-
-  showPending() {
-    this.currentFilter.set(this.filters.pending);
-  }
-
-
-
-
+    selected = signal<number | null>(null);
 
 
     selectToDo(num: number){
